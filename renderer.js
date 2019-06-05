@@ -24,3 +24,18 @@ ps.invoke()
         console.error(err)
         ps.dispose()
     })
+
+
+
+// MAC
+// var exec = require('child_process').exec, child;
+
+// child = exec(`lpadmin -p ${printer} -L "Warsaw" -E -v lpd://172.25.100.17 -P "/System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/PrintCore.framework/Versions/A/Resources/Generic.ppd" -o printer-is-shared=false`,
+//     function (error, stdout, stderr) {
+//         console.log('stdout: ' + stdout);
+//         console.log('stderr: ' + stderr);
+//         if (error !== null) {
+//             console.log('exec error: ' + error);
+//         }
+//     });
+// child();
