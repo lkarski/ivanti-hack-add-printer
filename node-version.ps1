@@ -1,0 +1,1 @@
+add-printer -connectionname '\\pol-file.ld.landesk.com\POL-Support'
