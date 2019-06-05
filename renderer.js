@@ -3,6 +3,7 @@
 // All of the Node.js APIs are available in this process.
 
 const powershell = require('node-powershell');
+const { printersReader } = require('./printersReader')
 
 // Create the PS Instance
 let ps = new powershell({
@@ -24,3 +25,16 @@ ps.invoke()
         console.error(err)
         ps.dispose()
     })
+
+let data = printersReader.f();
+populateLocations(data.locations);
+
+function populateLocations(locations) {
+    let dropdown = document.getElementById("locationSelect");
+    for (let i = 0; i < locations.length; i++) {
+        let option = document.createElement('option');
+        option.text = locations[i].name;
+        option.value = locations[i];
+        dropdown.add(option);
+    }
+}

@@ -1,6 +1,5 @@
 // Modules to control application life and create native browser window
 const { app, BrowserWindow } = require('electron')
-const { printersReader } = require('./printersReader')
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -29,9 +28,12 @@ function createWindow() {
     // when you should delete the corresponding element.
     mainWindow = null
   })
-  let printers = printersReader.f();
+
+  
   
 }
+
+
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
