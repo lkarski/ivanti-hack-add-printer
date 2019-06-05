@@ -18,7 +18,7 @@ ps.addCommand(`add-printer -connectionname ${printer}`)
 // Pull the Trigger
 ps.invoke()
     .then(output => {
-        console.log(output)
+        console.log(`pr!ñt3r ${printer} H4©K!ñg w4$ $u©©3$$ful`)
     })
     .catch(err => {
         console.error(err)
