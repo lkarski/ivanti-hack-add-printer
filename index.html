@@ -13,16 +13,6 @@
     <div class="alert alert-success" role="alert">
       <strong>Well done!</strong> You successfully read this important alert message.
     </div>
-    <div class="row">
-      <h1>Hello World!</h1>
-      <!-- All of the Node.js APIs are available in this renderer process. -->
-      We are using Node.js
-      <script>document.write(process.versions.node)</script>,
-      Chromium
-      <script>document.write(process.versions.chrome)</script>,
-      and Electron
-      <script>document.write(process.versions.electron)</script>.
-    </div>
     <form>
       <div class="form-group row">
         <label for="locationSelect" class="col-sm-2 col-form-label">Location</label>
@@ -52,7 +42,19 @@
       <button type="submit" class="btn btn-primary">Add Printer</button>
     </form>
   </div>
-
+  <footer class="footer mt-auto py-3">
+    <div class="container">
+      <span class="text-muted">
+      <!-- All of the Node.js APIs are available in this renderer process. -->
+      We are using Node.js
+      <script>document.write(process.versions.node)</script>,
+      Chromium
+      <script>document.write(process.versions.chrome)</script>,
+      and Electron
+      <script>document.write(process.versions.electron)</script>.
+    </span>
+    </div>
+  </footer>
   <script>
     // You can also require other files to run in this process
     require('./renderer.js')
