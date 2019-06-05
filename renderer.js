@@ -50,12 +50,13 @@ installPrinterButton.addEventListener('click', (event) => {
     let selectedPrinterName = selectedLocation.printers[printerIndex].name;
     let fullPrinterName = network + selectedPrinterName;
     console.log("Instalowana drukarka " + fullPrinterName);
-    installPrinter(fullPrinterName);
+    let setAsDefault = document.getElementById('makeDefaultPrinter').checked;
+    installPrinter(fullPrinterName, setAsDefault);
 
 });
 
 
-function installPrinter(printerName) {
+function installPrinter(printerName, setAsDefault = false) {
     // Create the PS Instance
     let ps = new powershell({
         executionPolicy: 'Bypass',
@@ -64,6 +65,9 @@ function installPrinter(printerName) {
 
     // Load the gun
     ps.addCommand(`add-printer -connectionname "${printerName}"`)
+    if(setAsDefault){
+        ps.addCommand(`(New-Object -ComObject WScript.Network).SetDefaultPrinter('${printerName}')`);
+    }
 
     // Pull the Trigger
     ps.invoke()
