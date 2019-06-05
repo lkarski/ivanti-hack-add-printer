@@ -1,25 +1,67 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <title>Ivanti - Install Printer</title>
-    <link rel="stylesheet" href="node_modules\bootstrap\dist\css\bootstrap.min.css">
-  </head>
-  <body>
-          <div class="container">
-            <div class="alert alert-success" role="alert">
-              <strong>Well done!</strong> You successfully read this important alert message.
-            </div>
-          </div>
-    <h1>Hello World!</h1>
-    <!-- All of the Node.js APIs are available in this renderer process. -->
-    We are using Node.js <script>document.write(process.versions.node)</script>,
-    Chromium <script>document.write(process.versions.chrome)</script>,
-    and Electron <script>document.write(process.versions.electron)</script>.
 
-    <script>
-      // You can also require other files to run in this process
-      require('./renderer.js')
-    </script>
-  </body>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Ivanti - Install Printer</title>
+  <link rel="stylesheet" href="node_modules\bootstrap\dist\css\bootstrap.min.css">
+</head>
+
+<body>
+  <div class="container">
+    <div class="alert alert-success" role="alert">
+      <strong>Well done!</strong> You successfully read this important alert message.
+    </div>
+    <div class="row">
+      <h1>Hello World!</h1>
+      <!-- All of the Node.js APIs are available in this renderer process. -->
+      We are using Node.js
+      <script>document.write(process.versions.node)</script>,
+      Chromium
+      <script>document.write(process.versions.chrome)</script>,
+      and Electron
+      <script>document.write(process.versions.electron)</script>.
+    </div>
+    <form>
+      <div class="form-group row">
+        <label for="locationSelect" class="col-sm-2 col-form-label">Location</label>
+        <div class="col-sm-10">
+          <select class="form-control" id="locationSelect">
+            <option>Warsaw</option>
+            <option>Bracknell</option>
+            <option>Den Bosch</option>
+            <option>Salt Lake City</option>
+            <option>Daresbury</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="printerSelect" class="col-sm-2 col-form-label">Printer</label>
+        <div class="col-sm-10">
+          <select class="form-control" id="printerSelect">
+            <option>POL-Support</option>
+            <option>POL-Reception</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-10">
+          <div class="form-check">
+            <input type="checkbox" class="form-check-input" id="makeDefaultPrinter">
+            <label class="form-check-label" for="makeDefaultPrinter">Set as default printer</label>
+          </div>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary">Add Printer</button>
+    </form>
+  </div>
+
+  <script>
+    // You can also require other files to run in this process
+    require('./renderer.js')
+  </script>
+</body>
+
 </html>
