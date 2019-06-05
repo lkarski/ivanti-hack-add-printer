@@ -34,10 +34,28 @@ function populateLocations(locations) {
     for (let i = 0; i < locations.length; i++) {
         let option = document.createElement('option');
         option.text = locations[i].name;
-        option.value = locations[i];
+        option.value = i;
         dropdown.add(option);
     }
 }
+
+let dropdown = document.getElementById("locationSelect");
+dropdown.addEventListener('change', (event) => {
+    let printerSelect = document.getElementById('printerSelect')
+    
+    for (let i = 0; i < printerSelect.options.length; i++) {
+        printerSelect.remove(i);
+    }
+
+    let printers = data.locations[event.target.value].printers;
+
+    for (let i = 0; i < printers.length; i++) {
+        let option = document.createElement('option');
+        option.text = printers[i].name;
+        option.value = printers[i].name;
+        printerSelect.add(option);
+    }
+})
 
 
 // MAC
