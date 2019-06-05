@@ -26,6 +26,15 @@
   "build": {
     "productName": "Add Printer",
     "appId": "hack.add.printer",
+    "icon": "./assets/icon.png",
+    "mac": {
+      "target": [
+        "dmg"
+      ]
+    },
+    "dmg": {
+      "artifactName": "AddPrinter.dmg"
+    },
     "win": {
       "target": [
         "portable"
@@ -37,7 +46,7 @@
     "directories": {
       "output": "./output",
       "app": "./",
-      "buildResources": "./buildResources"
+      "buildResources": "./assets"
     }
   }
 }
