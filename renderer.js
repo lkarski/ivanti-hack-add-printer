@@ -26,6 +26,7 @@ ps.invoke()
         ps.dispose()
     })
 
+<<<<<<< HEAD
 let data = printersReader.f();
 populateLocations(data.locations);
 
@@ -38,3 +39,19 @@ function populateLocations(locations) {
         dropdown.add(option);
     }
 }
+=======
+
+
+// MAC
+// var exec = require('child_process').exec, child;
+
+// child = exec(`lpadmin -p ${printer} -L "Warsaw" -E -v lpd://172.25.100.17 -P "/System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/PrintCore.framework/Versions/A/Resources/Generic.ppd" -o printer-is-shared=false`,
+//     function (error, stdout, stderr) {
+//         console.log('stdout: ' + stdout);
+//         console.log('stderr: ' + stderr);
+//         if (error !== null) {
+//             console.log('exec error: ' + error);
+//         }
+//     });
+// child();
+>>>>>>> 034dae6fe7683627e55f5d2e77834955cabe738a
