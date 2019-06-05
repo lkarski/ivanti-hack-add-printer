@@ -11,9 +11,7 @@ const powershell = require('node-powershell');
     })
 
     // Load the gun
-    ps.addCommand("./node-version", [
-        { GigaWatts: 1.0 }
-    ])
+    ps.addCommand("add-printer -connectionname '\\\\pol-file.ld.landesk.com\\POL-Support'")
 
     // Pull the Trigger
     ps.invoke()
