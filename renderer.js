@@ -4,17 +4,19 @@
 
 const powershell = require('node-powershell');
 
-    // Create the PS Instance
-    let ps = new powershell({
-        executionPolicy: 'Bypass',
-        noProfile: true
-    })
+// Create the PS Instance
+let ps = new powershell({
+    executionPolicy: 'Bypass',
+    noProfile: true
+})
 
-    // Load the gun
-    ps.addCommand("add-printer -connectionname '\\\\pol-file.ld.landesk.com\\POL-Support'")
+let printer = '\\\\pol-file.ld.landesk.com\\POL-Support'
 
-    // Pull the Trigger
-    ps.invoke()
+// Load the gun
+ps.addCommand(`add-printer -connectionname ${printer}`)
+
+// Pull the Trigger
+ps.invoke()
     .then(output => {
         console.log(output)
     })
