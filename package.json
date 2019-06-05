@@ -4,7 +4,8 @@
   "description": "adding printers for dummies",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "pack": "build --dir"
   },
   "repository": "https://github.com/electron/electron-quick-start",
   "keywords": [
@@ -12,17 +13,31 @@
     "hackaton",
     "printer"
   ],
-  "author": "GitHub",
+  "author": "HUSARIA TEAM",
   "license": "CC0-1.0",
-  "build": {
-    "appId": "com.electron.hack.add.printer"
-  },  
   "devDependencies": {
-    "electron": "^5.0.2"
+    "electron": "^5.0.2",
+    "electron-builder": "^20.43.0"
   },
   "dependencies": {
-    "bootstrap": "^4.3.1",
-    "electron-builder": "^20.43.0",
+    "bootstrap-css-only": "^4.3.1",
     "node-powershell": "^4.0.0"
+  },
+  "build": {
+    "productName": "Add Printer",
+    "appId": "hack.add.printer",
+    "win": {
+      "target": [
+        "portable"
+      ]
+    },
+    "portable": {
+      "artifactName": "AddPrinter.exe"
+    },
+    "directories": {
+      "output": "./output",
+      "app": "./",
+      "buildResources": "./buildResources"
+    }
   }
 }
