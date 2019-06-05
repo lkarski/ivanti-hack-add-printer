@@ -26,7 +26,6 @@ ps.invoke()
         ps.dispose()
     })
 
-<<<<<<< HEAD
 let data = printersReader.f();
 populateLocations(data.locations);
 
@@ -39,7 +38,6 @@ function populateLocations(locations) {
         dropdown.add(option);
     }
 }
-=======
 
 
 // MAC
@@ -54,4 +52,3 @@ function populateLocations(locations) {
 //         }
 //     });
 // child();
->>>>>>> 034dae6fe7683627e55f5d2e77834955cabe738a
