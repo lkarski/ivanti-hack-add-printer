@@ -27,7 +27,7 @@ dropdown.addEventListener('change', (event) => {
     populatePrinters(printers);
 });
 
-function populatePrinters(printers){
+function populatePrinters(printers) {
     let printerSelect = document.getElementById('printerSelect')
 
     printerSelect.innerHTML = "";
@@ -57,6 +57,10 @@ installPrinterButton.addEventListener('click', (event) => {
 
 
 function installPrinter(printerName, setAsDefault = false) {
+    // Activate spiner
+    document.getElementById("installPrinterButton").style.visibility = "visible";
+    document.getElementById("loadingImage").style.visibility = "hidden";
+
     // Create the PS Instance
     let ps = new powershell({
         executionPolicy: 'Bypass',
@@ -73,6 +77,10 @@ function installPrinter(printerName, setAsDefault = false) {
     ps.invoke()
         .then(output => {
             console.log(`pr!ñt3r ${printerName} H4©K!ñg w4$ $u©©3$$ful`)
+
+            //Hide spinner
+            document.getElementById("installPrinterButton").style.visibility = "visible";
+            document.getElementById("loadingImage").style.visibility = "hidden";
         })
         .catch(err => {
             console.error(err)
