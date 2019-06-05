@@ -18,15 +18,19 @@ function populateLocations(locations) {
         option.value = i;
         dropdown.add(option);
     }
+    populatePrinters(locations[0].printers);
 }
 
 let dropdown = document.getElementById("locationSelect");
 dropdown.addEventListener('change', (event) => {
+    let printers = data.locations[event.target.value].printers;
+    populatePrinters(printers);
+});
+
+function populatePrinters(printers){
     let printerSelect = document.getElementById('printerSelect')
 
     printerSelect.innerHTML = "";
-
-    let printers = data.locations[event.target.value].printers;
 
     for (let i = 0; i < printers.length; i++) {
         let option = document.createElement('option');
@@ -34,7 +38,7 @@ dropdown.addEventListener('change', (event) => {
         option.value = i;
         printerSelect.add(option);
     }
-});
+}
 
 let installPrinterButton = document.getElementById('installPrinterButton');
 installPrinterButton.addEventListener('click', (event) => {
