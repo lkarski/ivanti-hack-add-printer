@@ -5,26 +5,7 @@
 const powershell = require('node-powershell');
 const { printersReader } = require('./printersReader')
 
-// Create the PS Instance
-let ps = new powershell({
-    executionPolicy: 'Bypass',
-    noProfile: true
-})
 
-let printer = '\\\\pol-file.ld.landesk.com\\POL-Support'
-
-// Load the gun
-ps.addCommand(`add-printer -connectionname ${printer}`)
-
-// Pull the Trigger
-ps.invoke()
-    .then(output => {
-        console.log(`pr!ñt3r ${printer} H4©K!ñg w4$ $u©©3$$ful`)
-    })
-    .catch(err => {
-        console.error(err)
-        ps.dispose()
-    })
 
 let data = printersReader.f();
 populateLocations(data.locations);
@@ -42,21 +23,54 @@ function populateLocations(locations) {
 let dropdown = document.getElementById("locationSelect");
 dropdown.addEventListener('change', (event) => {
     let printerSelect = document.getElementById('printerSelect')
-    
-    for (let i = 0; i < printerSelect.options.length; i++) {
-        printerSelect.remove(i);
-    }
+
+    printerSelect.innerHTML = "";
 
     let printers = data.locations[event.target.value].printers;
 
     for (let i = 0; i < printers.length; i++) {
         let option = document.createElement('option');
         option.text = printers[i].name;
-        option.value = printers[i].name;
+        option.value = i;
         printerSelect.add(option);
     }
-})
+});
 
+let installPrinterButton = document.getElementById('installPrinterButton');
+installPrinterButton.addEventListener('click', (event) => {
+    console.log("bla bla");
+    let locationIndex = document.getElementById('locationSelect').value;
+    let selectedLocation = data.locations[locationIndex];
+    let network = selectedLocation.network;
+    let printerIndex = document.getElementById('printerSelect').value;
+    let selectedPrinterName = selectedLocation.printers[printerIndex].name;
+    let fullPrinterName = network + selectedPrinterName;
+    console.log("Instalowana drukarka " + fullPrinterName);
+    installPrinter(fullPrinterName);
+
+});
+
+
+function installPrinter(printerName) {
+    // Create the PS Instance
+    let ps = new powershell({
+        executionPolicy: 'Bypass',
+        noProfile: true
+    })
+
+    // Load the gun
+    ps.addCommand(`add-printer -connectionname "${printerName}"`)
+
+    // Pull the Trigger
+    ps.invoke()
+        .then(output => {
+            console.log(`pr!ñt3r ${printerName} H4©K!ñg w4$ $u©©3$$ful`)
+        })
+        .catch(err => {
+            console.error(err)
+            ps.dispose()
+        })
+}
 
 // MAC
 // var exec = require('child_process').exec, child;
