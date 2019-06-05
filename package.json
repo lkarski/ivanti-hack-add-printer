@@ -20,6 +20,7 @@
     "electron": "^5.0.2"
   },
   "dependencies": {
-    "node-powershell": "^4.0.0"
+    "node-powershell": "^4.0.0",
+    "bootstrap": "^4.3.1"
   }
 }
