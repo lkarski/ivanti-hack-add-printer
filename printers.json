@@ -1,0 +1,105 @@
+{
+    "locations": 
+    [
+        {
+            "name": "Warsaw",
+            "network": "\\\\pol-file.ld.landesk.com\\",
+            "printers": [
+                {
+                    "name": "POL-Support",
+                    "address": "placeholder"
+                },
+                {
+                    "name": "POL-Reception",
+                    "address": "placeholder"
+                }
+            ]
+        },
+        {
+            "name": "Daresbury",
+            "network": "\\\\apwaprs01.appsense.com\\",
+            "printers": [
+                {
+                    "name": "Support_Colour_Copier_v3",
+                    "address": "placeholder"
+                },
+                {
+                    "name": "Development_Colour_Copier_v3",
+                    "address": "placeholder"
+                }
+            ]
+        },
+        {
+            "name": "Den Bosch",
+            "network": "\\\\srv-print01.res.nl\\",
+            "printers": [
+                {
+                    "name": "FollowME",
+                    "address": "placeholder"
+                }
+            ]
+        },
+        {
+            "name": "Bucharest",
+            "network": "\\\\gbr-dhcp01.ld.landesk.com\\",
+            "printers": [
+                {
+                    "name": "HP LaserJet M775 Bucharest",
+                    "address": "placeholder"
+                }
+            ]
+        },
+        {
+            "name": "Bracknell",
+            "network": "\\\\brk-dhcp01.ld.landesk.com\\",
+            "printers": [
+                {
+                    "name": "Canon C2235 Sales and Marketing",
+                    "address": "placeholder"
+                },
+                {
+                    "name": "Canon C5235 Engineering",
+                    "address": "placeholder"
+                }
+            ]
+        },
+        {
+            "name": "Dublin",
+            "network": "\\\\irl-ld2.ld.landesk.com\\",
+            "printers": [
+                {
+                    "name": "Dublin Canon 1st Floor",
+                    "address": "placeholder"
+                },
+                {
+                    "name": "Dublin Canon 3rd Floor",
+                    "address": "placeholder"
+                },
+                {
+                    "name": "Dublin Canon Payroll",
+                    "address": "placeholder"
+                }
+            ]
+        },
+        {
+            "name": "Sydney",
+            "network": "\\\\syd-dhcp01.ld.landesk.com\\",
+            "printers": [
+                {
+                    "name": "KONICA MINOLTA C458",
+                    "address": "placeholder"
+                }
+            ]
+        },
+        {
+            "name": "Bangladesh",
+            "network": "\\\\in-dc01v.corp.lcl\\",
+            "printers": [
+                {
+                    "name": "Printer_IN_HP",
+                    "address": "placeholder"
+                }
+            ]
+        }
+    ]
+}
