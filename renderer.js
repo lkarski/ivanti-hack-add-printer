@@ -42,10 +42,7 @@ function populateLocations(locations) {
 let dropdown = document.getElementById("locationSelect");
 dropdown.addEventListener('change', (event) => {
     let printerSelect = document.getElementById('printerSelect')
-    
-    for (let i = 0; i < printerSelect.options.length; i++) {
-        printerSelect.remove(i);
-    }
+    printerSelect.innerHTML = "";
 
     let printers = data.locations[event.target.value].printers;
 
