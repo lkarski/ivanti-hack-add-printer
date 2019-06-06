@@ -6,8 +6,10 @@ const powershell = require('node-powershell');
 const { printersReader } = require('./printersReader')
 const { playAudio, stopAudio } = require('./audio.js')
 
+var data;
+
 ready(() => {
-    let data = printersReader.f();
+    data = printersReader.f();
     populateLocations(data.locations);
 
     playAudio('win98-start.mp3');
