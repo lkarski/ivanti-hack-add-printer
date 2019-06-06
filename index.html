@@ -13,51 +13,64 @@
   <div class="container">
     <h1 id="hi">Hi Dear Person,</h1>
     <p class="lead">
-        I presume you would like to print something of great importance.
+      I presume you would like to print something of great importance.
     </p>
     <p>
       Please select location and printer you would like to use.
     </p>
-    <form>
-      <div class="form-group row">
-        <label for="locationSelect" class="col-sm-2 col-form-label">Location</label>
-        <div class="col-sm-10">
-          <select class="form-control" id="locationSelect">
-          </select>
-        </div>
+    <div class="row">
+      <div class="col-sm-8">
+        <form>
+          <div class="form-group row">
+            <label for="locationSelect" class="col-sm-2 col-form-label">Location</label>
+            <div class="col-sm-10">
+              <select class="form-control" id="locationSelect">
+              </select>
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="printerSelect" class="col-sm-2 col-form-label">Printer</label>
+            <div class="col-sm-10">
+              <select class="form-control" id="printerSelect">
+              </select>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-sm-2"></div>
+            <div class="col-sm-10">
+              <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="makeDefaultPrinter">
+                <label class="form-check-label" for="makeDefaultPrinter">Set as default printer</label>
+              </div>
+            </div>
+          </div>
+        </form>
+        <div class="row">
+            <div class="col-sm-6">
+              <button id="installPrinterButton" class="btn btn-primary btn-block middle">
+                Add Printer
+              </button>
+            </div>
+            <div id="progressSpinner" class="spinner-grow text-success middle" role="status" hidden></div>
+          </div>
+          <div class="row">
+            <div class="col-sm-6">
+              <button id="printTestPageButton" class="btn btn-primary btn-block middle disabled" disabled>
+                Print test page
+              </button>
+            </div>
+            <img id="printingSpinner" class = "middle" src="./assets/animated-printer.gif" alt="Loading..." hidden>
+          </div>
       </div>
-      <div class="form-group row">
-        <label for="printerSelect" class="col-sm-2 col-form-label">Printer</label>
-        <div class="col-sm-10">
-          <select class="form-control" id="printerSelect">
-          </select>
-        </div>
-      </div>
-      <div class="form-group row">
-        <div class="col-sm-2"></div>
-        <div class="col-sm-10">
-          <div class="form-check">
-            <input type="checkbox" class="form-check-input" id="makeDefaultPrinter">
-            <label class="form-check-label" for="makeDefaultPrinter">Set as default printer</label>
+      <div class="col-sm-4">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">You are in</h5>
+            <h6 id="geoAddress" class="card-subtitle mb-2 text-muted"></h6>
+            <p id="geoMisc" class="card-text"></p>
           </div>
         </div>
       </div>
-    </form>
-    <div class="row">
-      <div class="col-sm-3">
-        <button id="installPrinterButton" class="btn btn-primary btn-block middle">
-          Add Printer
-        </button>
-      </div>
-      <div id="progressSpinner" class="spinner-grow text-success middle" role="status" hidden></div>
-    </div>
-    <div class="row">
-      <div class="col-sm-3">
-        <button id="printTestPageButton" class="btn btn-primary btn-block middle disabled" disabled>
-          Print test page
-        </button>
-      </div>
-      <div id="printingSpinner" class="spinner-grow text-success middle" role="status" hidden></div>
     </div>
     <div class="row" id="office-map">
       <h2>Office map</h2>
