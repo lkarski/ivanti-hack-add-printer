@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>Ivanti - Install Printer</title>
   <link rel="stylesheet" href="node_modules\bootstrap-css-only\css\bootstrap.min.css">
+  <link rel="stylesheet" href="custom.css">
 </head>
 
 <body>
@@ -38,20 +39,24 @@
         </div>
       </div>
     </form>
-    <button id="installPrinterButton" class="btn btn-primary">Add Printer</button>
+    <span>
+      <button id="installPrinterButton" class="btn btn-primary middle" >Add Printer
+      </button>
+      <div  id="progressSpinner" class="spinner-grow middle" role="status" hidden></div>
+    </span>
     <img id="loadingImage" src="./assets/animated-printer.gif" alt="Loading..." style="visibility: hidden">
   </div>
   <footer class="footer mt-auto py-3">
     <div class="container">
       <span class="text-muted">
-      <!-- All of the Node.js APIs are available in this renderer process. -->
-      We are using Node.js
-      <script>document.write(process.versions.node)</script>,
-      Chromium
-      <script>document.write(process.versions.chrome)</script>,
-      and Electron
-      <script>document.write(process.versions.electron)</script>.
-    </span>
+        <!-- All of the Node.js APIs are available in this renderer process. -->
+        We are using Node.js
+        <script>document.write(process.versions.node)</script>,
+        Chromium
+        <script>document.write(process.versions.chrome)</script>,
+        and Electron
+        <script>document.write(process.versions.electron)</script>.
+      </span>
     </div>
   </footer>
   <script>

@@ -72,6 +72,7 @@ function installPrinter(printerName, setAsDefault = false) {
     if(setAsDefault){
         ps.addCommand(`(New-Object -ComObject WScript.Network).SetDefaultPrinter('${printerName}')`);
     }
+    disableInstallButton();
 
     // Pull the Trigger
     ps.invoke()
@@ -85,7 +86,25 @@ function installPrinter(printerName, setAsDefault = false) {
         .catch(err => {
             console.error(err)
             ps.dispose()
+        }).then(output => {
+            enableInstallButton();
         })
+}
+let installButton = document.getElementById("installPrinterButton");
+let progressSpinner = document.getElementById("progressSpinner");
+
+function disableInstallButton(){
+    installButton.setAttribute("aria-disabled", "true");
+    installButton.setAttribute("disabled", "true");
+    installButton.classList.add("disabled");
+    progressSpinner.removeAttribute("hidden");
+}
+
+function enableInstallButton(){
+    installButton.removeAttribute("aria-disabled");
+    installButton.removeAttribute("disabled");
+    installButton.classList.remove("disabled");
+    progressSpinner.setAttribute("hidden", "true");
 }
 
 // MAC
