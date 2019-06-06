@@ -5,6 +5,8 @@
 const powershell = require('node-powershell');
 const { printersReader } = require('./printersReader')
 const { playAudio, stopAudio } = require('./audio.js')
+const exec = require('child_process').exec, child;
+
 
 ready(() => {
     let data = printersReader.f();
@@ -29,7 +31,13 @@ installPrinterButton.addEventListener('click', (event) => {
     let fullPrinterName = network + selectedPrinterName;
     console.log("Instalowana drukarka " + fullPrinterName);
     let setAsDefault = document.getElementById('makeDefaultPrinter').checked;
-    installPrinter(fullPrinterName, setAsDefault);
+    
+
+    if (navigator.platform.indexOf('Mac') > -1) {
+        installPrinterOnMac(selectedPrinterName, network, setAsDefault);
+    } else if (navigator.platform.indexOf('Win') > -1) {
+        installPrinterOnWindows(fullPrinterName, setAsDefault);
+    }
 });
 
 function populateLocations(locations) {
@@ -56,7 +64,7 @@ function populatePrinters(printers) {
     }
 }
 
-function installPrinter(printerName, setAsDefault = false) {
+function installPrinterOnWindows(printerName, setAsDefault = false) {
     // Activate spiner
     document.getElementById("installPrinterButton").style.visibility = "visible";
     document.getElementById("loadingImage").style.visibility = "hidden";
@@ -110,18 +118,17 @@ function enableInstallButton() {
     progressSpinner.setAttribute("hidden", "true");
 }
 
-// MAC
-// var exec = require('child_process').exec, child;
-
-// child = exec(`lpadmin -p ${printer} -L "Warsaw" -E -v lpd://172.25.100.17 -P "/System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/PrintCore.framework/Versions/A/Resources/Generic.ppd" -o printer-is-shared=false`,
-//     function (error, stdout, stderr) {
-//         console.log('stdout: ' + stdout);
-//         console.log('stderr: ' + stderr);
-//         if (error !== null) {
-//             console.log('exec error: ' + error);
-//         }
-//     });
-// child();
+function installPrinterOnMac(printer, network, setAsDefault = false) {
+    child = exec(`lpadmin -p ${printer} -L "Warsaw" -E -v lpd:${network} -P "/System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/PrintCore.framework/Versions/A/Resources/Generic.ppd" -o printer-is-shared=false`,
+        function (error, stdout, stderr) {
+            console.log('stdout: ' + stdout);
+            console.log('stderr: ' + stderr);
+            if (error !== null) {
+                console.log('exec error: ' + error);
+            }
+        });
+    child();
+}
 
 
 function ready(fn) {
