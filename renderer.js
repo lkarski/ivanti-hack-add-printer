@@ -9,19 +9,19 @@ const { playAudio, stopAudio } = require('./audio.js')
 const { getUserIP } = require('./checkIP.js')
 
 const data = getPrinters()
-const ips = Array();
+const costam = [];
 getUserIP(function (ip) {
-    // console.log("Got IP! :" + ip);
-    ips.push(splitIP(ip))
+    costam.push(splitIP(ip))
+    console.log("getUserIO")
+    console.log(costam)
 })
-
 
 const username = process.env.username || process.env.user;
 
 ready(() => {
     populateLocations(data.locations);
     playAudio('win98-start.mp3');
-    findLocation(ips, data.locations)
+    findLocation(data.locations)
     showOfficeMap(data.locations[0])
     greet(username);
 })
@@ -234,11 +234,17 @@ function splitIP(ip) {
 }
 
 
-function findLocation(ips, locations) {
-    for (let i = 0; i < locations.length; i++) {
-        if (locations[i].address && ips.includes(splitIP(locations[i].address))) {
-            let dropdown = document.getElementById("locationSelect");
-            dropdown.selectedIndex = i;
+function findLocation(locations) {
+    setTimeout(() => {
+        for (let i = 0; i < locations.length; i++) {
+            console.log("add: " + splitIP(locations[i].address))
+            if (locations[i].address && costam.includes(splitIP(locations[i].address))) {
+                let dropdown = document.getElementById("locationSelect");
+                dropdown.selectedIndex = i;
+                populatePrinters(locations[i].printers);
+                blockPrintTestPage();
+                showOfficeMap(locations[i])
+            }
         }
-    }
+    }, 2000);
 }

@@ -10,7 +10,7 @@ function getPrinters() {
   request.open('GET', URL, false);
   request.send(null);
   if (request.status === 200) {
-    console.log(request.responseText);
+    // console.log(request.responseText);
     printers = JSON.parse(request.responseText);
   }
 
