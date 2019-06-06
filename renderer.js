@@ -2,7 +2,8 @@
 // be executed in the renderer process for that window.
 // All of the Node.js APIs are available in this process.
 
-const powershell = require('node-powershell');
+const fs = require('fs')
+const powershell = require('node-powershell')
 const { getPrinters } = require('./get-printers')
 const { playAudio, stopAudio } = require('./audio.js')
 
@@ -10,17 +11,22 @@ const { playAudio, stopAudio } = require('./audio.js')
 const data = getPrinters()
 
 ready(() => {
-    populateLocations(data.locations);
-    playAudio('win98-start.mp3');
+    populateLocations(data.locations)
+    showOfficeMap(data.locations[0])
+    playAudio('win98-start.mp3')
 })
 
 let printTestPageButton = document.getElementById("printTestPageButton");
 let printingSpinner = document.getElementById("printingSpinner");
 let dropdown = document.getElementById("locationSelect");
+
 dropdown.addEventListener('change', (event) => {
-    let printers = data.locations[event.target.value].printers;
+    let location = data.locations[event.target.value]
+    let printers = location.printers
+
     populatePrinters(printers);
     disableButton(printTestPageButton);
+    showOfficeMap(location)
 });
 
 let printersDropdown = document.getElementById("printerSelect");
@@ -57,6 +63,19 @@ function populateLocations(locations) {
         dropdown.add(option);
     }
     populatePrinters(locations[0].printers);
+}
+
+function showOfficeMap(location) {
+    let img = document.getElementById('office-map-img')
+    let div = document.getElementById('office-map')
+    let imgFile = `assets/office-map-${location.name}.gif`
+    if (fs.existsSync(imgFile)) {
+        img.src = imgFile
+        div.style.display = ''
+    }
+    else {
+        div.style.display = 'none'
+    }
 }
 
 function populatePrinters(printers) {
