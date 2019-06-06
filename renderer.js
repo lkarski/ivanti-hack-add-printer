@@ -15,11 +15,20 @@ ready(() => {
     playAudio('win98-start.mp3');
 })
 
+let printTestPageButton = document.getElementById("printTestPageButton");
+let printingSpinner = document.getElementById("printingSpinner");
 let dropdown = document.getElementById("locationSelect");
 dropdown.addEventListener('change', (event) => {
     let printers = data.locations[event.target.value].printers;
     populatePrinters(printers);
+    disableButton(printTestPageButton);
 });
+
+let printersDropdown = document.getElementById("printerSelect");
+printersDropdown.addEventListener('change', (event) => {
+    disableButton(printTestPageButton);
+});
+
 
 let installPrinterButton = document.getElementById('installPrinterButton');
 installPrinterButton.addEventListener('click', (event) => {
@@ -101,6 +110,7 @@ function installPrinterOnWindows(printerName, setAsDefault = false) {
         }).then(output => {
             enableButton(installButton, progressSpinner);
             stopAudio();
+            enableButton(printTestPageButton);
         })
 }
 
