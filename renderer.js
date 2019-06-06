@@ -71,20 +71,26 @@ installPrinterButton.addEventListener('click', (event) => {
 
 printTestPageButton.addEventListener('click', (event) => {
     console.log("print test page button");
-
+    let ps = new powershell({
+        executionPolicy: 'Bypass',
+        noProfile: true
+    });
     let fullPrinterName = getSelectedPrinterName();
     console.log("no " + fullPrinterName);
     ps.addCommand(`./print.ps1 -Printer "${fullPrinterName}"`);
+    playAudio("printer.mp3");
     disableButton(null, printingSpinner);
     ps.invoke()
         .then(output => {
             console.log(output);
             enableButton(null, printingSpinner);
+            stopAudio();
         })
         .catch(err => {
             enableButton(null, printingSpinner);
-            console.error(err)
-            ps.dispose()
+            console.error(err);
+            stopAudio();
+            ps.dispose();
         })
 });
 
