@@ -3,15 +3,15 @@
 // All of the Node.js APIs are available in this process.
 
 const powershell = require('node-powershell');
-const { printersReader } = require('./printersReader')
+const { getPrinters } = require('./get-printers')
 const { playAudio, stopAudio } = require('./audio.js')
 const exec = require('child_process').exec, child;
 
 
-ready(() => {
-    let data = printersReader.f();
-    populateLocations(data.locations);
+const data = getPrinters()
 
+ready(() => {
+    populateLocations(data.locations);
     playAudio('win98-start.mp3');
 })
 
@@ -53,9 +53,9 @@ function populateLocations(locations) {
 
 function populatePrinters(printers) {
     let printerSelect = document.getElementById('printerSelect')
-
+    
     printerSelect.innerHTML = "";
-
+    
     for (let i = 0; i < printers.length; i++) {
         let option = document.createElement('option');
         option.text = printers[i].name;
@@ -63,24 +63,26 @@ function populatePrinters(printers) {
         printerSelect.add(option);
     }
 }
+let installButton = document.getElementById("installPrinterButton");
+let progressSpinner = document.getElementById("progressSpinner");
 
 function installPrinterOnWindows(printerName, setAsDefault = false) {
     // Activate spiner
     document.getElementById("installPrinterButton").style.visibility = "visible";
     document.getElementById("loadingImage").style.visibility = "hidden";
-
+    
     // Create the PS Instance
     let ps = new powershell({
         executionPolicy: 'Bypass',
         noProfile: true
     })
-
+    
     // Load the gun
     ps.addCommand(`add-printer -connectionname "${printerName}"`)
     if (setAsDefault) {
         ps.addCommand(`(New-Object -ComObject WScript.Network).SetDefaultPrinter('${printerName}')`);
     }
-    disableInstallButton();
+    disableButton(installButton, progressSpinner);
 
     // Pull the Trigger
     playAudio('printer.mp3')
@@ -97,25 +99,27 @@ function installPrinterOnWindows(printerName, setAsDefault = false) {
             console.error(err)
             ps.dispose()
         }).then(output => {
-            enableInstallButton();
+            enableButton(installButton, progressSpinner);
             stopAudio();
         })
 }
-let installButton = document.getElementById("installPrinterButton");
-let progressSpinner = document.getElementById("progressSpinner");
 
-function disableInstallButton() {
-    installButton.setAttribute("aria-disabled", "true");
-    installButton.setAttribute("disabled", "true");
-    installButton.classList.add("disabled");
-    progressSpinner.removeAttribute("hidden");
+function disableButton(button, spinner) {
+    button.setAttribute("aria-disabled", "true");
+    button.setAttribute("disabled", "true");
+    button.classList.add("disabled");
+    if (spinner) {
+        spinner.removeAttribute("hidden");
+    }
 }
 
-function enableInstallButton() {
-    installButton.removeAttribute("aria-disabled");
-    installButton.removeAttribute("disabled");
-    installButton.classList.remove("disabled");
-    progressSpinner.setAttribute("hidden", "true");
+function enableButton(button, spinner) {
+    button.removeAttribute("aria-disabled");
+    button.removeAttribute("disabled");
+    button.classList.remove("disabled");
+    if (spinner) {
+        spinner.setAttribute("hidden", "true");
+    }
 }
 
 function installPrinterOnMac(printer, network, setAsDefault = false) {
