@@ -79,7 +79,7 @@ function populateLocations(locations) {
 function showOfficeMap(location) {
     let img = document.getElementById('office-map-img')
     let div = document.getElementById('office-map')
-    let imgFile = `assets/office-map-${location.name}.gif`
+    let imgFile = `assets/office-map-${location.name}.png`
     if (fs.existsSync(imgFile)) {
         img.src = imgFile
         div.style.display = ''
