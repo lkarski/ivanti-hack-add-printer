@@ -3,15 +3,13 @@
 // All of the Node.js APIs are available in this process.
 
 const powershell = require('node-powershell');
-const { printersReader } = require('./printersReader')
+const { getPrinters } = require('./get-printers')
 const { playAudio, stopAudio } = require('./audio.js')
 
-var data;
+const data = getPrinters()
 
 ready(() => {
-    data = printersReader.f();
     populateLocations(data.locations);
-
     playAudio('win98-start.mp3');
 })
 
