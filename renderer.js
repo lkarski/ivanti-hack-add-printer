@@ -5,7 +5,6 @@
 const powershell = require('node-powershell');
 const { getPrinters } = require('./get-printers')
 const { playAudio, stopAudio } = require('./audio.js')
-const exec = require('child_process').exec, child;
 
 
 const data = getPrinters()
@@ -133,6 +132,8 @@ function enableButton(button, spinner) {
 }
 
 function installPrinterOnMac(printer, network, setAsDefault = false) {
+    let exec = require('child_process').exec, child;
+
     child = exec(`lpadmin -p ${printer} -L "Warsaw" -E -v lpd:${network} -P "/System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/PrintCore.framework/Versions/A/Resources/Generic.ppd" -o printer-is-shared=false`,
         function (error, stdout, stderr) {
             console.log('stdout: ' + stdout);
