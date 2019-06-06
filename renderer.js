@@ -4,11 +4,33 @@
 
 const powershell = require('node-powershell');
 const { printersReader } = require('./printersReader')
+const { playAudio, stopAudio } = require('./audio.js')
 
+ready(() => {
+    let data = printersReader.f();
+    populateLocations(data.locations);
 
+    playAudio('win98-start.mp3');
+})
 
-let data = printersReader.f();
-populateLocations(data.locations);
+let dropdown = document.getElementById("locationSelect");
+dropdown.addEventListener('change', (event) => {
+    let printers = data.locations[event.target.value].printers;
+    populatePrinters(printers);
+});
+
+let installPrinterButton = document.getElementById('installPrinterButton');
+installPrinterButton.addEventListener('click', (event) => {
+    let locationIndex = document.getElementById('locationSelect').value;
+    let selectedLocation = data.locations[locationIndex];
+    let network = selectedLocation.network;
+    let printerIndex = document.getElementById('printerSelect').value;
+    let selectedPrinterName = selectedLocation.printers[printerIndex].name;
+    let fullPrinterName = network + selectedPrinterName;
+    console.log("Instalowana drukarka " + fullPrinterName);
+    let setAsDefault = document.getElementById('makeDefaultPrinter').checked;
+    installPrinter(fullPrinterName, setAsDefault);
+});
 
 function populateLocations(locations) {
     let dropdown = document.getElementById("locationSelect");
@@ -20,12 +42,6 @@ function populateLocations(locations) {
     }
     populatePrinters(locations[0].printers);
 }
-
-let dropdown = document.getElementById("locationSelect");
-dropdown.addEventListener('change', (event) => {
-    let printers = data.locations[event.target.value].printers;
-    populatePrinters(printers);
-});
 
 function populatePrinters(printers) {
     let printerSelect = document.getElementById('printerSelect')
@@ -40,22 +56,6 @@ function populatePrinters(printers) {
     }
 }
 
-let installPrinterButton = document.getElementById('installPrinterButton');
-installPrinterButton.addEventListener('click', (event) => {
-    console.log("bla bla");
-    let locationIndex = document.getElementById('locationSelect').value;
-    let selectedLocation = data.locations[locationIndex];
-    let network = selectedLocation.network;
-    let printerIndex = document.getElementById('printerSelect').value;
-    let selectedPrinterName = selectedLocation.printers[printerIndex].name;
-    let fullPrinterName = network + selectedPrinterName;
-    console.log("Instalowana drukarka " + fullPrinterName);
-    let setAsDefault = document.getElementById('makeDefaultPrinter').checked;
-    installPrinter(fullPrinterName, setAsDefault);
-
-});
-
-
 function installPrinter(printerName, setAsDefault = false) {
     // Activate spiner
     document.getElementById("installPrinterButton").style.visibility = "visible";
@@ -69,12 +69,13 @@ function installPrinter(printerName, setAsDefault = false) {
 
     // Load the gun
     ps.addCommand(`add-printer -connectionname "${printerName}"`)
-    if(setAsDefault){
+    if (setAsDefault) {
         ps.addCommand(`(New-Object -ComObject WScript.Network).SetDefaultPrinter('${printerName}')`);
     }
     disableInstallButton();
 
     // Pull the Trigger
+    playAudio('printer.mp3')
     ps.invoke()
         .then(output => {
             console.log(`pr!ñt3r ${printerName} H4©K!ñg w4$ $u©©3$$ful`)
@@ -82,25 +83,27 @@ function installPrinter(printerName, setAsDefault = false) {
             //Hide spinner
             document.getElementById("installPrinterButton").style.visibility = "visible";
             document.getElementById("loadingImage").style.visibility = "hidden";
+            stopAudio();
         })
         .catch(err => {
             console.error(err)
             ps.dispose()
         }).then(output => {
             enableInstallButton();
+            stopAudio();
         })
 }
 let installButton = document.getElementById("installPrinterButton");
 let progressSpinner = document.getElementById("progressSpinner");
 
-function disableInstallButton(){
+function disableInstallButton() {
     installButton.setAttribute("aria-disabled", "true");
     installButton.setAttribute("disabled", "true");
     installButton.classList.add("disabled");
     progressSpinner.removeAttribute("hidden");
 }
 
-function enableInstallButton(){
+function enableInstallButton() {
     installButton.removeAttribute("aria-disabled");
     installButton.removeAttribute("disabled");
     installButton.classList.remove("disabled");
@@ -119,3 +122,14 @@ function enableInstallButton(){
 //         }
 //     });
 // child();
+
+
+function ready(fn) {
+    if (document.attachEvent
+        ? document.readyState === "complete"
+        : document.readyState !== "loading") {
+        fn();
+    } else {
+        document.addEventListener('DOMContentLoaded', fn);
+    }
+}
