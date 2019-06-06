@@ -45,13 +45,34 @@ installPrinterButton.addEventListener('click', (event) => {
     let fullPrinterName = network + selectedPrinterName;
     console.log("Instalowana drukarka " + fullPrinterName);
     let setAsDefault = document.getElementById('makeDefaultPrinter').checked;
-    
+
 
     if (navigator.platform.indexOf('Mac') > -1) {
         installPrinterOnMac(selectedPrinterName, network, setAsDefault);
     } else if (navigator.platform.indexOf('Win') > -1) {
         installPrinterOnWindows(fullPrinterName, setAsDefault);
     }
+});
+
+
+//########
+printTestPageButton.addEventListener('click', (event) => {
+    console.log("print test page button");
+    let ps = new powershell({
+        executionPolicy: 'Bypass',
+        noProfile: true
+    })
+
+    ps.addCommand(`./print.ps1`)
+
+    ps.invoke()
+        .then(output => {
+            console.log(output);
+        })
+        .catch(err => {
+            console.error(err)
+            ps.dispose()
+        })
 });
 
 function greet(username) {
@@ -91,9 +112,9 @@ function showOfficeMap(location) {
 
 function populatePrinters(printers) {
     let printerSelect = document.getElementById('printerSelect')
-    
+
     printerSelect.innerHTML = "";
-    
+
     for (let i = 0; i < printers.length; i++) {
         let option = document.createElement('option');
         option.text = printers[i].name;
@@ -110,13 +131,13 @@ function installPrinterOnWindows(printerName, setAsDefault = false) {
     document.getElementById("loadingImage").style.visibility = "hidden";
 
     let printTestPageButton = document.getElementById("printTestPageButton");
-    
+
     // Create the PS Instance
     let ps = new powershell({
         executionPolicy: 'Bypass',
         noProfile: true
     })
-    
+
     // Load the gun
     ps.addCommand(`add-printer -connectionname "${printerName}"`)
     if (setAsDefault) {

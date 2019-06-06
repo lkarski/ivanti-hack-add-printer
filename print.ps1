@@ -1,0 +1,1 @@
+Start-Process -FilePath ".\assets\1.pdf" -Verb PrintTo "\\pol-file.ld.landesk.com\POL-Reception" -PassThru
