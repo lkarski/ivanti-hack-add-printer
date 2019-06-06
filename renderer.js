@@ -15,15 +15,18 @@ getUserIP(function (ip) {
     ips.push(splitIP(ip))
 })
 
-
-const username = process.env.username || process.env.user;
+const username = process.env.username || process.env.user || process.env.USER;
 
 ready(() => {
     populateLocations(data.locations);
     playAudio('win98-start.mp3');
     findLocation(ips, data.locations)
     showOfficeMap(data.locations[0])
-    greet(username);
+    greet(username)
+    getGeoLocation()
+        .then(geo => {
+            showGeoLocation(geo)
+        })
 })
 
 let dropdown = document.getElementById("locationSelect");
@@ -66,14 +69,9 @@ installPrinterButton.addEventListener('click', (event) => {
     }
 });
 
-
-//########
 printTestPageButton.addEventListener('click', (event) => {
     console.log("print test page button");
-    let ps = new powershell({
-        executionPolicy: 'Bypass',
-        noProfile: true
-    })
+
     let fullPrinterName = getSelectedPrinterName();
     console.log("no " + fullPrinterName);
     ps.addCommand(`./print.ps1 -Printer "${fullPrinterName}"`);
@@ -89,6 +87,39 @@ printTestPageButton.addEventListener('click', (event) => {
             ps.dispose()
         })
 });
+
+function showGeoLocation(geo) {
+    console.log(geo)
+    let geoAddress = document.getElementById("geoAddress")
+    geoAddress.innerHTML = `${geo.city}, ${geo.country}, ${geo.address26}`
+    let geoMisc = document.getElementById("geoMisc")
+    geoMisc.innerHTML = `${geo.building}, ${geo.neighbourhood}`
+}
+
+function getGeoLocation() {
+    let ps = new powershell({
+        executionPolicy: 'Bypass',
+        noProfile: true
+    })
+
+    // Load the gun
+    ps.addCommand('./get-location')
+
+    // Pull the Trigger
+    return ps.invoke()
+        .then(output => {
+            try {
+                return JSON.parse(output)
+            }
+            catch (error) {
+                console.log(error)
+            }
+        })
+        .catch(err => {
+            console.error(err)
+            ps.dispose()
+        })
+}
 
 function greet(username) {
     hi = document.getElementById('hi')
@@ -139,7 +170,7 @@ function populatePrinters(printers) {
 }
 let installButton = document.getElementById("installPrinterButton");
 let progressSpinner = document.getElementById("progressSpinner");
-let printingSpinner= document.getElementById('printingSpinner');
+let printingSpinner = document.getElementById('printingSpinner');
 function installPrinterOnWindows(printerName, setAsDefault = false) {
     // Activate spiner
     document.getElementById("installPrinterButton").style.visibility = "visible";
