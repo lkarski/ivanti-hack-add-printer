@@ -7,7 +7,6 @@ const powershell = require('node-powershell')
 const { getPrinters } = require('./get-printers')
 const { playAudio, stopAudio } = require('./audio.js')
 
-
 const data = getPrinters()
 
 ready(() => {
@@ -16,8 +15,6 @@ ready(() => {
     playAudio('win98-start.mp3')
 })
 
-let printTestPageButton = document.getElementById("printTestPageButton");
-let printingSpinner = document.getElementById("printingSpinner");
 let dropdown = document.getElementById("locationSelect");
 
 dropdown.addEventListener('change', (event) => {
@@ -25,13 +22,13 @@ dropdown.addEventListener('change', (event) => {
     let printers = location.printers
 
     populatePrinters(printers);
-    disableButton(printTestPageButton);
+    blockPrintTestPage();
     showOfficeMap(location)
 });
 
 let printersDropdown = document.getElementById("printerSelect");
 printersDropdown.addEventListener('change', (event) => {
-    disableButton(printTestPageButton);
+    blockPrintTestPage();
 });
 
 
@@ -53,6 +50,11 @@ installPrinterButton.addEventListener('click', (event) => {
         installPrinterOnWindows(fullPrinterName, setAsDefault);
     }
 });
+
+function blockPrintTestPage() {
+    let printTestPageButton = document.getElementById("printTestPageButton");
+    disableButton(printTestPageButton);
+}
 
 function populateLocations(locations) {
     let dropdown = document.getElementById("locationSelect");
@@ -97,6 +99,8 @@ function installPrinterOnWindows(printerName, setAsDefault = false) {
     // Activate spiner
     document.getElementById("installPrinterButton").style.visibility = "visible";
     document.getElementById("loadingImage").style.visibility = "hidden";
+
+    let printTestPageButton = document.getElementById("printTestPageButton");
     
     // Create the PS Instance
     let ps = new powershell({
