@@ -9,10 +9,13 @@ const { playAudio, stopAudio } = require('./audio.js')
 
 const data = getPrinters()
 
+const username = process.env.username || process.env.user;
+
 ready(() => {
     populateLocations(data.locations)
     showOfficeMap(data.locations[0])
     playAudio('win98-start.mp3')
+    greet(username);
 })
 
 let dropdown = document.getElementById("locationSelect");
@@ -50,6 +53,12 @@ installPrinterButton.addEventListener('click', (event) => {
         installPrinterOnWindows(fullPrinterName, setAsDefault);
     }
 });
+
+function greet(username) {
+    hi = document.getElementById('hi')
+    let name = username.split('.')[0] || 'Dear Sir/Madam'
+    hi.innerHTML = `Hi ${name},`
+}
 
 function blockPrintTestPage() {
     let printTestPageButton = document.getElementById("printTestPageButton");
