@@ -5,13 +5,21 @@
 const powershell = require('node-powershell');
 const { getPrinters } = require('./get-printers')
 const { playAudio, stopAudio } = require('./audio.js')
-
+const { getUserIP } = require('./checkIP.js')
 
 const data = getPrinters()
+const ips = Array();
+getUserIP(function (ip) {
+    // console.log("Got IP! :" + ip);
+    ips.push(splitIP(ip))
+})
+
 
 ready(() => {
     populateLocations(data.locations);
     playAudio('win98-start.mp3');
+    console.log(ips)
+    findLocation(ips, data.locations)
 })
 
 let printTestPageButton = document.getElementById("printTestPageButton");
@@ -39,7 +47,7 @@ installPrinterButton.addEventListener('click', (event) => {
     let fullPrinterName = network + selectedPrinterName;
     console.log("Instalowana drukarka " + fullPrinterName);
     let setAsDefault = document.getElementById('makeDefaultPrinter').checked;
-    
+
 
     if (navigator.platform.indexOf('Mac') > -1) {
         installPrinterOnMac(selectedPrinterName, network, setAsDefault);
@@ -61,9 +69,9 @@ function populateLocations(locations) {
 
 function populatePrinters(printers) {
     let printerSelect = document.getElementById('printerSelect')
-    
+
     printerSelect.innerHTML = "";
-    
+
     for (let i = 0; i < printers.length; i++) {
         let option = document.createElement('option');
         option.text = printers[i].name;
@@ -78,13 +86,13 @@ function installPrinterOnWindows(printerName, setAsDefault = false) {
     // Activate spiner
     document.getElementById("installPrinterButton").style.visibility = "visible";
     document.getElementById("loadingImage").style.visibility = "hidden";
-    
+
     // Create the PS Instance
     let ps = new powershell({
         executionPolicy: 'Bypass',
         noProfile: true
     })
-    
+
     // Load the gun
     ps.addCommand(`add-printer -connectionname "${printerName}"`)
     if (setAsDefault) {
@@ -153,5 +161,20 @@ function ready(fn) {
         fn();
     } else {
         document.addEventListener('DOMContentLoaded', fn);
+    }
+}
+
+function splitIP(ip) {
+    let splitIP = ip.split(/\./)
+    return splitIP[0] + "." + splitIP[1]
+}
+
+
+function findLocation(ips, locations) {
+    for (let i = 0; i < locations.length; i++) {
+        if (locations[i].address && ips.includes(splitIP(locations[i].address))) {
+            let dropdown = document.getElementById("locationSelect");
+            dropdown.selectedIndex = i;
+        }
     }
 }
