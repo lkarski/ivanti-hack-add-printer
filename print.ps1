@@ -1,1 +1,4 @@
-Start-Process -FilePath ".\assets\1.pdf" -Verb PrintTo "\\pol-file.ld.landesk.com\POL-Reception" -PassThru
+Param(
+[string] $Printer
+)
+$process = Start-Process -WindowStyle hidden -FilePath ".\assets\1.pdf" -Verb PrintTo $Printer -PassThru

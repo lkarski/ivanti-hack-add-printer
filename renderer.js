@@ -42,15 +42,19 @@ printersDropdown.addEventListener('change', (event) => {
     blockPrintTestPage();
 });
 
-
-let installPrinterButton = document.getElementById('installPrinterButton');
-installPrinterButton.addEventListener('click', (event) => {
+function getSelectedPrinterName() {
     let locationIndex = document.getElementById('locationSelect').value;
     let selectedLocation = data.locations[locationIndex];
     let network = selectedLocation.network;
     let printerIndex = document.getElementById('printerSelect').value;
     let selectedPrinterName = selectedLocation.printers[printerIndex].name;
     let fullPrinterName = network + selectedPrinterName;
+    return fullPrinterName
+}
+
+let installPrinterButton = document.getElementById('installPrinterButton');
+installPrinterButton.addEventListener('click', (event) => {
+    let fullPrinterName = getSelectedPrinterName();
     console.log("Instalowana drukarka " + fullPrinterName);
     let setAsDefault = document.getElementById('makeDefaultPrinter').checked;
 
@@ -70,14 +74,17 @@ printTestPageButton.addEventListener('click', (event) => {
         executionPolicy: 'Bypass',
         noProfile: true
     })
-
-    ps.addCommand(`./print.ps1`)
-
+    let fullPrinterName = getSelectedPrinterName();
+    console.log("no " + fullPrinterName);
+    ps.addCommand(`./print.ps1 -Printer "${fullPrinterName}"`);
+    disableButton(null, printingSpinner);
     ps.invoke()
         .then(output => {
             console.log(output);
+            enableButton(null, printingSpinner);
         })
         .catch(err => {
+            enableButton(null, printingSpinner);
             console.error(err)
             ps.dispose()
         })
@@ -132,7 +139,7 @@ function populatePrinters(printers) {
 }
 let installButton = document.getElementById("installPrinterButton");
 let progressSpinner = document.getElementById("progressSpinner");
-
+let printingSpinner= document.getElementById('printingSpinner');
 function installPrinterOnWindows(printerName, setAsDefault = false) {
     // Activate spiner
     document.getElementById("installPrinterButton").style.visibility = "visible";
@@ -175,18 +182,22 @@ function installPrinterOnWindows(printerName, setAsDefault = false) {
 }
 
 function disableButton(button, spinner) {
-    button.setAttribute("aria-disabled", "true");
-    button.setAttribute("disabled", "true");
-    button.classList.add("disabled");
+    if (button) {
+        button.setAttribute("aria-disabled", "true");
+        button.setAttribute("disabled", "true");
+        button.classList.add("disabled");
+    }
     if (spinner) {
         spinner.removeAttribute("hidden");
     }
 }
 
 function enableButton(button, spinner) {
-    button.removeAttribute("aria-disabled");
-    button.removeAttribute("disabled");
-    button.classList.remove("disabled");
+    if (button) {
+        button.removeAttribute("aria-disabled");
+        button.removeAttribute("disabled");
+        button.classList.remove("disabled");
+    }
     if (spinner) {
         spinner.setAttribute("hidden", "true");
     }
