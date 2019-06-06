@@ -11,9 +11,13 @@
 
 <body>
   <div class="container">
-    <div class="alert alert-success" role="alert">
-      <strong>Well done!</strong> You successfully read this important alert message.
-    </div>
+    <h1 id="hi">Hi Dear Person,</h1>
+    <p class="lead">
+        I presume you would like to print something of great importance.
+    </p>
+    <p>
+      Please select location and printer you would like to use.
+    </p>
     <form>
       <div class="form-group row">
         <label for="locationSelect" class="col-sm-2 col-form-label">Location</label>
@@ -55,7 +59,12 @@
       </div>
       <div id="printingSpinner" class="spinner-grow text-success middle" role="status" hidden></div>
     </div>
-
+    <div class="row" id="office-map">
+      <h2>Office map</h2>
+      <div class="col-sm-12">
+        <img id="office-map-img" src="assets/office-map.gif"></img>
+      </div>
+    </div>
 
     <img id="loadingImage" src="./assets/animated-printer.gif" alt="Loading..." style="visibility: hidden">
   </div>

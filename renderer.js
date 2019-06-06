@@ -2,7 +2,8 @@
 // be executed in the renderer process for that window.
 // All of the Node.js APIs are available in this process.
 
-const powershell = require('node-powershell');
+const fs = require('fs')
+const powershell = require('node-powershell')
 const { getPrinters } = require('./get-printers')
 const { playAudio, stopAudio } = require('./audio.js')
 const { getUserIP } = require('./checkIP.js')
@@ -15,25 +16,30 @@ getUserIP(function (ip) {
 })
 
 
+const username = process.env.username || process.env.user;
+
 ready(() => {
     populateLocations(data.locations);
     playAudio('win98-start.mp3');
-    console.log(ips)
     findLocation(ips, data.locations)
+    showOfficeMap(data.locations[0])
+    greet(username);
 })
 
-let printTestPageButton = document.getElementById("printTestPageButton");
-let printingSpinner = document.getElementById("printingSpinner");
 let dropdown = document.getElementById("locationSelect");
+
 dropdown.addEventListener('change', (event) => {
-    let printers = data.locations[event.target.value].printers;
+    let location = data.locations[event.target.value]
+    let printers = location.printers
+
     populatePrinters(printers);
-    disableButton(printTestPageButton);
+    blockPrintTestPage();
+    showOfficeMap(location)
 });
 
 let printersDropdown = document.getElementById("printerSelect");
 printersDropdown.addEventListener('change', (event) => {
-    disableButton(printTestPageButton);
+    blockPrintTestPage();
 });
 
 
@@ -56,6 +62,38 @@ installPrinterButton.addEventListener('click', (event) => {
     }
 });
 
+
+//########
+printTestPageButton.addEventListener('click', (event) => {
+    console.log("print test page button");
+    let ps = new powershell({
+        executionPolicy: 'Bypass',
+        noProfile: true
+    })
+
+    ps.addCommand(`./print.ps1`)
+
+    ps.invoke()
+        .then(output => {
+            console.log(output);
+        })
+        .catch(err => {
+            console.error(err)
+            ps.dispose()
+        })
+});
+
+function greet(username) {
+    hi = document.getElementById('hi')
+    let name = username.split('.')[0] || 'Dear Sir/Madam'
+    hi.innerHTML = `Hi ${name},`
+}
+
+function blockPrintTestPage() {
+    let printTestPageButton = document.getElementById("printTestPageButton");
+    disableButton(printTestPageButton);
+}
+
 function populateLocations(locations) {
     let dropdown = document.getElementById("locationSelect");
     for (let i = 0; i < locations.length; i++) {
@@ -65,6 +103,19 @@ function populateLocations(locations) {
         dropdown.add(option);
     }
     populatePrinters(locations[0].printers);
+}
+
+function showOfficeMap(location) {
+    let img = document.getElementById('office-map-img')
+    let div = document.getElementById('office-map')
+    let imgFile = `assets/office-map-${location.name}.png`
+    if (fs.existsSync(imgFile)) {
+        img.src = imgFile
+        div.style.display = ''
+    }
+    else {
+        div.style.display = 'none'
+    }
 }
 
 function populatePrinters(printers) {
@@ -86,6 +137,8 @@ function installPrinterOnWindows(printerName, setAsDefault = false) {
     // Activate spiner
     document.getElementById("installPrinterButton").style.visibility = "visible";
     document.getElementById("loadingImage").style.visibility = "hidden";
+
+    let printTestPageButton = document.getElementById("printTestPageButton");
 
     // Create the PS Instance
     let ps = new powershell({
