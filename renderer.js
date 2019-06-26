@@ -33,6 +33,8 @@ ready(() => {
     }
 
     if (config.platform.win) { turnOnPrintTestPage() }
+
+    showEnvironmentInfo()
 })
 
 let dropdown = document.getElementById("locationSelect");
@@ -301,4 +303,9 @@ function findLocation(locations) {
             }
         }
     }, 2000);
+}
+
+function showEnvironmentInfo() {
+    let info = document.getElementById('envInfo')
+    info.innerHTML = `Running on Node.js ${process.versions.node}, Chromium ${process.versions.chrome}, and Electron ${process.versions.electron}`
 }

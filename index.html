@@ -7,24 +7,24 @@
   <title>Ivanti - Install Printer</title>
   <link rel="stylesheet" href="node_modules\bootstrap-css-only\css\bootstrap.min.css">
   <link rel="stylesheet" href="custom.css">
+  <link rel='shortcut icon' type='image/x-icon' href='/favicon-ivanti.ico' />
 </head>
 
 <body>
   <div class="container">
-    <div class="row">
-      <div class="col-sm-1">
-        <img id="ivantiLogo" class="middle" src="./assets/ivanti-logo.png" height="50px" alt="Ivanti Logo">
-      </div>
-      <div class="col-sm-11">
-        <h1 id="hi">Hi Dear Person,</h1>
+    <div class="media">
+      <img id="ivantiLogo" class="align-self-center mr-3" src="./assets/ivanti-logo.png" height="50px"
+        alt="Ivanti Logo">
+      <div class="media-body">
+        <h5 id="hi" class="mt-3">Hi Dear Person,</h5>
         <p class="lead">
           I presume you would like to print something of great importance.
         </p>
       </div>
-      <p>
-        Please select location and printer you would like to use.
-      </p>
     </div>
+    <p>
+      Please select location and printer you would like to use.
+    </p>
     <div class="row">
       <div class="col-sm-8">
         <form>
@@ -88,17 +88,13 @@
 
     <img id="loadingImage" src="./assets/animated-printer.gif" alt="Loading..." style="visibility: hidden">
   </div>
-  <footer class="footer mt-auto py-3">
-    <div class="container">
-      <span class="text-muted">
-        <!-- All of the Node.js APIs are available in this renderer process. -->
-        We are using Node.js
-        <script>document.write(process.versions.node)</script>,
-        Chromium
-        <script>document.write(process.versions.chrome)</script>,
-        and Electron
-        <script>document.write(process.versions.electron)</script>.
-      </span>
+  <footer class="footer">
+    <div class="container-fluid">
+      <p class="text-muted text-center">
+        <small id="envInfo">
+          <!-- filled in by showEnvironmentInfo() -->
+        </small>
+      </p>
     </div>
   </footer>
   <script>
