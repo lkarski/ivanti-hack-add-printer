@@ -7,28 +7,32 @@ const powershell = require('node-powershell')
 const { getPrinters } = require('./get-printers')
 const { playAudio, stopAudio } = require('./audio.js')
 const { getUserIP } = require('./checkIP.js')
+const config = require('./config') 
 
 const data = getPrinters()
 const costam = [];
 getUserIP(function (ip) {
     costam.push(splitIP(ip))
-    console.log("getUserIO")
-    console.log(costam)
 })
 
 
 const username = process.env.username || process.env.user || process.env.USER;
 
 ready(() => {
-    populateLocations(data.locations);
-    playAudio('win98-start.mp3');
+    console.log('config', config)
+
+    if (config.enableStartupSound) { playAudio('win98-start.mp3') }
+    populateLocations(data.locations)
     findLocation(data.locations)
     showOfficeMap(data.locations[0])
     greet(username)
-    getGeoLocation()
-        .then(geo => {
-            showGeoLocation(geo)
-        })
+
+    if (config.platform.win) {
+        getGeoLocation()
+            .then(geo => showGeoLocation(geo))
+    }
+
+    if (config.platform.win) { turnOnPrintTestPage() }
 })
 
 let dropdown = document.getElementById("locationSelect");
@@ -60,25 +64,26 @@ function getSelectedPrinterName() {
 let installPrinterButton = document.getElementById('installPrinterButton');
 installPrinterButton.addEventListener('click', (event) => {
     let fullPrinterName = getSelectedPrinterName();
-    console.log("Instalowana drukarka " + fullPrinterName);
+    console.log("installing printer: " + fullPrinterName);
     let setAsDefault = document.getElementById('makeDefaultPrinter').checked;
 
 
-    if (navigator.platform.indexOf('Mac') > -1) {
+    if (config.platform.mac) {
         installPrinterOnMac(selectedPrinterName, network, setAsDefault);
-    } else if (navigator.platform.indexOf('Win') > -1) {
+    } else if (config.platform.win) {
         installPrinterOnWindows(fullPrinterName, setAsDefault);
     }
 });
 
 printTestPageButton.addEventListener('click', (event) => {
-    console.log("print test page button");
+    let printingSpinner = document.getElementById('printingSpinner');
+
+    console.log("printing test page");
     let ps = new powershell({
         executionPolicy: 'Bypass',
         noProfile: true
     });
     let fullPrinterName = getSelectedPrinterName();
-    console.log("no " + fullPrinterName);
     ps.addCommand(`./print.ps1 -Printer "${fullPrinterName}"`);
     playAudio("printer.mp3");
     disableButton(null, printingSpinner);
@@ -97,11 +102,14 @@ printTestPageButton.addEventListener('click', (event) => {
 });
 
 function showGeoLocation(geo) {
-    console.log(geo)
+    let div = document.getElementById('geoLocation')
     let geoAddress = document.getElementById("geoAddress")
-    geoAddress.innerHTML = `${geo.city}, ${geo.country}, ${geo.address26}`
     let geoMisc = document.getElementById("geoMisc")
+    
+    console.log(geo)
+    geoAddress.innerHTML = `${geo.city}, ${geo.country}, ${geo.address26}`
     geoMisc.innerHTML = `${geo.building}, ${geo.neighbourhood}`
+    div.classList.remove('d-none')
 }
 
 function getGeoLocation() {
@@ -136,8 +144,8 @@ function greet(username) {
 }
 
 function blockPrintTestPage() {
-    let printTestPageButton = document.getElementById("printTestPageButton");
-    disableButton(printTestPageButton);
+    let button = document.getElementById("printTestPageButton");
+    disableButton(button);
 }
 
 function populateLocations(locations) {
@@ -152,15 +160,17 @@ function populateLocations(locations) {
 }
 
 function showOfficeMap(location) {
+    if (!config.enableOfficeMaps) return;
+
     let img = document.getElementById('office-map-img')
     let div = document.getElementById('office-map')
     let imgFile = `assets/office-map-${location.name}.png`
     if (fs.existsSync(imgFile)) {
         img.src = imgFile
-        div.style.display = ''
+        div.classList.remove('d-none')
     }
     else {
-        div.style.display = 'none'
+        div.classList.add('d-none')
     }
 }
 
@@ -176,10 +186,10 @@ function populatePrinters(printers) {
         printerSelect.add(option);
     }
 }
-let installButton = document.getElementById("installPrinterButton");
-let progressSpinner = document.getElementById("progressSpinner");
-let printingSpinner = document.getElementById('printingSpinner');
+
 function installPrinterOnWindows(printerName, setAsDefault = false) {
+    let installButton = document.getElementById("installPrinterButton");
+    let progressSpinner = document.getElementById("progressSpinner");
     // Activate spiner
     document.getElementById("installPrinterButton").style.visibility = "visible";
     document.getElementById("loadingImage").style.visibility = "hidden";
@@ -218,6 +228,11 @@ function installPrinterOnWindows(printerName, setAsDefault = false) {
             stopAudio();
             enableButton(printTestPageButton);
         })
+}
+
+function turnOnPrintTestPage() {
+    let button = document.getElementById("printTestPageButton");
+    button.classList.remove("d-none");
 }
 
 function disableButton(button, spinner) {
