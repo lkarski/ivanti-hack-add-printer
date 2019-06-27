@@ -12,3 +12,38 @@ THATS IT.
 Your app should be in .\output
 
 To build Mac version you need to repeat it on Mac.
+
+
+### Data & Config 
+
+The app requires `Ivanti_printers.json` to be present in a specific location to
+load data and config.
+
+The structure of that file is as follows:
+```
+{
+    "locations": 
+    [
+        {
+            "name": "Warsaw",
+            "network": "\\\\warsaw.location.shared.folder\\",
+            "address": "network base ip address",
+            "printers": [
+                {
+                    "name": "printer name",
+                    "address": "printer address"
+                },
+                // more printers here...
+            ]
+        },
+        // more locations here...
+    ],
+    "config":
+    {
+        "enableOfficeMaps": false,
+        "enableStartupSound": false,
+        "enableGeoLocation": false,
+        "enablePrintTestPage": false
+    }
+}
+```
