@@ -7,9 +7,11 @@ const powershell = require('node-powershell')
 const { getPrinters } = require('./get-printers')
 const { playAudio, stopAudio } = require('./audio.js')
 const { getUserIP } = require('./checkIP.js')
-const config = require('./config') 
+const { configure } = require('./config') 
 
 const data = getPrinters()
+console.log(data.config)
+const config = configure(data.config)
 const costam = [];
 getUserIP(function (ip) {
     costam.push(splitIP(ip))
@@ -27,12 +29,12 @@ ready(() => {
     showOfficeMap(data.locations[0])
     greet(username)
 
-    if (config.platform.win) {
+    if (config.platform.win && config.enableGeoLocation) {
         getGeoLocation()
             .then(geo => showGeoLocation(geo))
     }
 
-    if (config.platform.win) { turnOnPrintTestPage() }
+    if (config.platform.win && config.enablePrintTestPage) { turnOnPrintTestPage() }
 
     showEnvironmentInfo()
 })
@@ -68,7 +70,6 @@ installPrinterButton.addEventListener('click', (event) => {
     let fullPrinterName = getSelectedPrinterName();
     console.log("installing printer: " + fullPrinterName);
     let setAsDefault = document.getElementById('makeDefaultPrinter').checked;
-
 
     if (config.platform.mac) {
         installPrinterOnMac(selectedPrinterName, network, setAsDefault);
