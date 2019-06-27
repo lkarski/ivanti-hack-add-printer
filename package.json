@@ -28,7 +28,7 @@
   "build": {
     "productName": "Add Printer",
     "appId": "hack.add.printer",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/prnt.png",
     "mac": {
       "target": [
         "dmg"
