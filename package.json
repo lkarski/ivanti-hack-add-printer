@@ -49,6 +49,10 @@
       "output": "./output",
       "app": "./",
       "buildResources": "./assets"
-    }
+    },
+    "files": [
+      "assets/*",
+      "*"
+    ]
   }
 }

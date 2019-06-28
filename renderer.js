@@ -2,6 +2,7 @@
 // be executed in the renderer process for that window.
 // All of the Node.js APIs are available in this process.
 
+const path = require('path')
 const fs = require('fs')
 const powershell = require('node-powershell')
 const { getPrinters } = require('./get-printers')
@@ -87,7 +88,12 @@ printTestPageButton.addEventListener('click', (event) => {
         noProfile: true
     });
     let fullPrinterName = getSelectedPrinterName();
-    ps.addCommand(`./print.ps1 -Printer "${fullPrinterName}"`);
+    let ps1File = path.join(__dirname, 'assets', 'print')
+    let pdfFilePath = path.join(__dirname, '1.pdf')
+
+    let printCmd = `Start-Process -WindowStyle hidden -FilePath "${pdfFilePath}" -Verb PrintTo ${fullPrinterName} -PassThru | %{sleep 15;$_} | kill`
+    // ps.addCommand(ps1File, [ { Printer: fullPrinterName } ]);
+    ps.addCommand(printCmd);
     playAudio("printer.mp3");
     disableButton(null, printingSpinner);
     ps.invoke()
@@ -122,7 +128,9 @@ function getGeoLocation() {
     })
 
     // Load the gun
-    ps.addCommand('./get-location')
+    let ps1File = path.join(__dirname, 'assets', 'get-location.ps1')
+    // ps.addCommand('./assets/get-location.ps1')
+    ps.addCommand(getGeoLocationCmd)
 
     // Pull the Trigger
     return ps.invoke()
@@ -310,3 +318,32 @@ function showEnvironmentInfo() {
     let info = document.getElementById('envInfo')
     info.innerHTML = `Running on Node.js ${process.versions.node}, Chromium ${process.versions.chrome}, and Electron ${process.versions.electron}`
 }
+
+
+let getGeoLocationCmd = `
+Add-Type -AssemblyName System.Device #Required to access System.Device.Location namespace
+$GeoWatcher = New-Object System.Device.Location.GeoCoordinateWatcher #Create the required object
+$GeoWatcher.Start() | out-null #Begin resolving current locaton
+
+$CivicAddressResolver = New-Object System.Device.Location.CivicAddressResolver
+
+while (($GeoWatcher.Status -ne 'Ready') -and ($GeoWatcher.Permission -ne 'Denied')) {
+    Start-Sleep -Milliseconds 100 #Wait for discovery.
+}  
+
+if ($GeoWatcher.Permission -eq 'Denied'){
+    Write-Error 'Access Denied for Location Information'
+} else {
+    $CivicAddressResolver.ResolveAddress($GeoWatcher.Position.Location) | out-null
+    $coord = $GeoWatcher.Position.Location
+    $url = "http://nominatim.openstreetmap.org/reverse?format=json&lat=$($coord.Latitude.ToString().Replace(',','.'))&lon=$($coord.Longitude.ToString().Replace(',','.'))&zoom=18&addressdetails=1"
+    
+    try {
+        $result = Invoke-RestMethod -Uri $url
+        $result.address | Select-Object -Property building,city,state,postcode,country,address26,neighbourhood | ConvertTo-Json
+    }
+    catch {
+        Write-Warning $_.Exception.Message
+    }
+}
+`
